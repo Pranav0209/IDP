@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>cp vs X_m Visualizer</title>
+  <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(to bottom right, #eef2f3, #cfd9df);
+      margin: 0;
+      padding: 2rem;
+      color: #333;
+    }
+
+    h2, h3 {
+      color: #2c3e50;
+    }
+
+    label {
+      font-weight: bold;
+    }
+
+    input[type="number"] {
+      padding: 0.4rem;
+      border-radius: 4px;
+      border: 1px solid #ccc;
+      margin-bottom: 0.8rem;
+      width: 150px;
+      font-size: 1rem;
+    }
+
+    select {
+      padding: 0.4rem;
+      font-size: 1rem;
+      border-radius: 4px;
+      border: 1px solid #ccc;
+      background-color: white;
+      width: 120px;
+    }
+
+    button {
+      padding: 0.5rem 1.2rem;
+      background-color: #3498db;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: background-color 0.3s;
+    }
+
+    button:hover {
+      background-color: #2980b9;
+    }
+
+    .loader {
+      display: none;
+      border: 6px solid #f3f3f3;
+      border-top: 6px solid #3498db;
+      border-radius: 50%;
+      width: 30px;
+      height: 30px;
+      animation: spin 1s linear infinite;
+      margin-left: 10px;
+      vertical-align: middle;
+    }
+
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+
+    .status {
+      margin-left: 1rem;
+      font-weight: bold;
+      color: #777;
+    }
+
+    #predictionResult p {
+      margin: 0.5rem 0;
+      font-size: 1.1rem;
+    }
+
+    #plot, #mlPlot {
+      background: white;
+      border-radius: 10px;
+      padding: 10px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    }
+  </style>
+</head>
+<body>
+  <h2>Interactive Visualization: <code>cp</code> vs <code>X_m</code> by Angle of Attack</h2>
+
+  <label for="aoa">Select AoA (deg):</label>
+  <select id="aoa"></select>
+
+  <div style="margin-top: 2rem;">
+    <h3>Predict cp using the ML model</h3>
+    <p>{{ explanation['x_m'] }}</p>
+    <label for="x_m">X_m:</label>
+    <small>Enter a value between 0.0 and 1.0 (position along the airfoil)</small><br>
+    <input type="number" id="x_m" step="0.01" min="0" max="1" />
+
+    <p>{{ explanation['aoa'] }}</p>
+    <label for="input_aoa">AoA:</label>
+    <small>Typical range: -10° to 30°. AoA affects lift and pressure distribution.</small><br>
+    <input type="number" id="input_aoa" step="1" />
+
+    <p>{{ explanation['pressure'] }}</p>
+    <label for="pressure">Pressure (Pa):</label>
+    <small>Expected around 100,000 Pa. Use absolute pressure in Pascals.</small><br>
+    <input type="number" id="pressure" step="1" />
+
+    <button onclick="predictCp()" style="margin-left: 1rem;">Predict</button>
+    <div id="loading" class="loader"></div>
+    <div id="statusMsg" class="status"></div>
+    <div id="predictionResult" style="margin-top: 1rem; font-weight: bold;"></div>
+  </div>
+
+  <div id="plot" style="margin-top: 30px;"></div>
+  <div id="mlPlot" style="margin-top: 40px;"></div>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", function () {
+      // Pass aoa_values from Flask to JS using a script tag with JSON
+      const aoaValues = JSON.parse('{{ aoa_values | tojson | safe }}');
+      const aoaSelect = document.getElementById("aoa");
+      const plotDiv = document.getElementById("plot");
+
+      // Populate dropdown
+      for (let v of aoaValues) {
+        const option = document.createElement("option");
+        option.value = v;
+        option.textContent = v;
+        aoaSelect.appendChild(option);
+      }
+
+      // Initial plot
+      if (aoaValues.length > 0) {
+        loadPlot(aoaValues[0]);
+      }
+
+      // Handle selection change
+      aoaSelect.addEventListener("change", () => {
+        loadPlot(aoaSelect.value);
+      });
+
+      // Fetch and plot data
+      function loadPlot(aoa) {
+        if (!aoa) return; // Prevent empty aoa fetch
+        fetch(`/get_cp_data?aoa=${encodeURIComponent(aoa)}`)
+          .then(res => res.json())
+          .then(data => {
+            if (data.error) {
+              plotDiv.innerHTML = `<div style='color:red;'>${data.error}</div>`;
+              return;
+            }
+            const x = data.map(d => d.X_m);
+            const y = data.map(d => d.cp);
+
+            const trace = {
+              x: x,
+              y: y,
+              mode: 'markers+lines',
+              type: 'scatter',
+              name: `AoA ${aoa}°`,
+              marker: { color: '#0074D9' }
+            };
+
+            const layout = {
+              title: `cp vs X_m (AoA = ${aoa}°)`,
+              xaxis: { title: "X_m (Position along airfoil)" },
+              yaxis: { title: "cp (Pressure Coefficient)" },
+              margin: { t: 50, l: 50, r: 30, b: 50 }
+            };
+
+            Plotly.newPlot("plot", [trace], layout);
+          });
+      }
+    });
+
+    function predictCp() {
+      const button = document.querySelector("button[onclick='predictCp()']");
+      button.disabled = true;
+      button.innerText = "Predicting...";
+      document.getElementById("loading").style.display = "inline-block";
+      document.getElementById("statusMsg").innerText = "Loading prediction...";
+
+      const x_m = document.getElementById("x_m").value;
+      const aoa = document.getElementById("input_aoa").value;
+      const pressure = document.getElementById("pressure").value;
+
+      if (!x_m || !aoa || !pressure) {
+        document.getElementById("loading").style.display = "none";
+        document.getElementById("statusMsg").innerText = "";
+        document.getElementById("predictionResult").innerText = "Please fill all inputs.";
+        button.disabled = false;
+        button.innerText = "Predict";
+        return;
+      }
+
+      fetch(`/predict_cp?x_m=${encodeURIComponent(x_m)}&aoa=${encodeURIComponent(aoa)}&pressure=${encodeURIComponent(pressure)}`)
+        .then(res => res.json())
+        .then(data => {
+          if (data.nn_predicted_cp !== undefined && data.gb_predicted_cp !== undefined) {
+            document.getElementById("predictionResult").innerHTML = `
+              <p style="color: green;"><strong>Neural Network cp:</strong> ${data.nn_predicted_cp.toFixed(4)}</p>
+              <p style="color: orange;"><strong>Gradient Boosting cp:</strong> ${data.gb_predicted_cp.toFixed(4)}</p>
+            `;
+
+            Plotly.newPlot("mlPlot", [
+              {
+                x: [parseFloat(x_m)],
+                y: [data.nn_predicted_cp],
+                mode: 'markers',
+                marker: { size: 12, color: 'green' },
+                name: 'NN Predicted cp'
+              },
+              {
+                x: [parseFloat(x_m)],
+                y: [data.gb_predicted_cp],
+                mode: 'markers',
+                marker: { size: 12, color: 'orange' },
+                name: 'GB Predicted cp'
+              }
+            ], {
+              title: 'Comparison of Predicted cp at given X_m',
+              xaxis: { title: 'X_m' },
+              yaxis: { title: 'cp' },
+              margin: { t: 40, l: 50, r: 30, b: 50 }
+            });
+          } else {
+            document.getElementById("predictionResult").innerText = data.error || "Prediction failed.";
+          }
+          document.getElementById("loading").style.display = "none";
+          document.getElementById("statusMsg").innerText = "";
+          button.disabled = false;
+          button.innerText = "Predict";
+        })
+        .catch(err => {
+          document.getElementById("loading").style.display = "none";
+          document.getElementById("predictionResult").innerText = "Prediction failed due to network or server error.";
+          document.getElementById("statusMsg").innerText = "";
+          button.disabled = false;
+          button.innerText = "Predict";
+        });
+    }
+  </script>
+</body>
+</html>
