@@ -3,68 +3,189 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>cp vs X_m Visualizer</title>
+  <title>Airfoil Pressure Coefficient Prediction</title>
   <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
   <style>
-    body {
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      background: linear-gradient(to bottom right, #eef2f3, #cfd9df);
+    * {
       margin: 0;
-      padding: 2rem;
-      color: #333;
+      padding: 0;
+      box-sizing: border-box;
     }
 
-    h2, h3 {
-      color: #2c3e50;
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      min-height: 100vh;
+      color: #1a202c;
+      line-height: 1.6;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 2rem;
+    }
+
+    .header {
+      text-align: center;
+      margin-bottom: 3rem;
+      color: white;
+    }
+
+    .header h1 {
+      font-size: 3rem;
+      font-weight: 700;
+      margin-bottom: 0.5rem;
+      text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+    }
+
+    .header p {
+      font-size: 1.2rem;
+      opacity: 0.9;
+      font-weight: 300;
+    }
+
+    .card {
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(10px);
+      border-radius: 20px;
+      padding: 2rem;
+      margin-bottom: 2rem;
+      box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+      border: 1px solid rgba(255,255,255,0.2);
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 25px 50px rgba(0,0,0,0.15);
+    }
+
+    .card-header {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      margin-bottom: 1.5rem;
+      padding-bottom: 1rem;
+      border-bottom: 2px solid #e2e8f0;
+    }
+
+    .card-header i {
+      font-size: 1.5rem;
+      color: #667eea;
+    }
+
+    .card-title {
+      font-size: 1.5rem;
+      font-weight: 600;
+      color: #2d3748;
+    }
+
+    .form-group {
+      margin-bottom: 1.5rem;
+    }
+
+    .form-row {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 2rem;
+      margin-bottom: 2rem;
     }
 
     label {
-      font-weight: bold;
+      display: block;
+      font-weight: 600;
+      color: #4a5568;
+      margin-bottom: 0.5rem;
+      font-size: 0.95rem;
     }
 
-    input[type="number"] {
-      padding: 0.4rem;
-      border-radius: 4px;
-      border: 1px solid #ccc;
-      margin-bottom: 0.8rem;
-      width: 150px;
+    .input-group {
+      position: relative;
+    }
+
+    input[type="number"], select {
+      width: 100%;
+      padding: 0.75rem 1rem;
+      border: 2px solid #e2e8f0;
+      border-radius: 12px;
       font-size: 1rem;
+      transition: all 0.3s ease;
+      background: white;
     }
 
-    select {
-      padding: 0.4rem;
-      font-size: 1rem;
-      border-radius: 4px;
-      border: 1px solid #ccc;
-      background-color: white;
-      width: 120px;
+    input[type="number"]:focus, select:focus {
+      outline: none;
+      border-color: #667eea;
+      box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+      transform: translateY(-1px);
     }
 
-    button {
-      padding: 0.5rem 1.2rem;
-      background-color: #3498db;
+    .help-text {
+      font-size: 0.85rem;
+      color: #718096;
+      margin-top: 0.25rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .help-text i {
+      color: #667eea;
+    }
+
+    .btn {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
       color: white;
       border: none;
-      border-radius: 6px;
+      padding: 0.75rem 2rem;
+      border-radius: 12px;
       font-size: 1rem;
+      font-weight: 600;
       cursor: pointer;
-      transition: background-color 0.3s;
+      transition: all 0.3s ease;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
     }
 
-    button:hover {
-      background-color: #2980b9;
+    .btn:hover:not(:disabled) {
+      transform: translateY(-2px);
+      box-shadow: 0 10px 25px rgba(102, 126, 234, 0.3);
+    }
+
+    .btn:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+      transform: none;
+    }
+
+    .btn-predict {
+      background: linear-gradient(135deg, #48bb78 0%, #38a169 100%);
+    }
+
+    .btn-predict:hover:not(:disabled) {
+      box-shadow: 0 10px 25px rgba(72, 187, 120, 0.3);
+    }
+
+    .loading-container {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      margin-top: 1rem;
     }
 
     .loader {
       display: none;
-      border: 6px solid #f3f3f3;
-      border-top: 6px solid #3498db;
+      width: 24px;
+      height: 24px;
+      border: 3px solid #e2e8f0;
+      border-top: 3px solid #667eea;
       border-radius: 50%;
-      width: 30px;
-      height: 30px;
       animation: spin 1s linear infinite;
-      margin-left: 10px;
-      vertical-align: middle;
     }
 
     @keyframes spin {
@@ -73,55 +194,247 @@
     }
 
     .status {
-      margin-left: 1rem;
-      font-weight: bold;
-      color: #777;
+      font-weight: 500;
+      color: #667eea;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
     }
 
-    #predictionResult p {
-      margin: 0.5rem 0;
-      font-size: 1.1rem;
+    .result-container {
+      margin-top: 2rem;
+      padding: 1.5rem;
+      background: linear-gradient(135deg, #f7fafc 0%, #edf2f7 100%);
+      border-radius: 12px;
+      border-left: 4px solid #667eea;
     }
 
-    #plot, #mlPlot {
+    .result-item {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      margin-bottom: 1rem;
+      padding: 1rem;
       background: white;
-      border-radius: 10px;
-      padding: 10px;
-      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+      border-radius: 8px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+    }
+
+    .result-item:last-child {
+      margin-bottom: 0;
+    }
+
+    .result-icon {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-weight: bold;
+    }
+
+    .result-icon.nn {
+      background: linear-gradient(135deg, #48bb78 0%, #38a169 100%);
+    }
+
+    .result-icon.gb {
+      background: linear-gradient(135deg, #ed8936 0%, #dd6b20 100%);
+    }
+
+    .result-text {
+      flex: 1;
+    }
+
+    .result-label {
+      font-weight: 600;
+      color: #2d3748;
+      margin-bottom: 0.25rem;
+    }
+
+    .result-value {
+      font-size: 1.25rem;
+      font-weight: 700;
+      font-family: 'Monaco', 'Menlo', monospace;
+    }
+
+    .result-value.nn {
+      color: #38a169;
+    }
+
+    .result-value.gb {
+      color: #dd6b20;
+    }
+
+    .error {
+      background: linear-gradient(135deg, #fed7d7 0%, #feb2b2 100%);
+      color: #c53030;
+      padding: 1rem;
+      border-radius: 12px;
+      border-left: 4px solid #e53e3e;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      margin-top: 1rem;
+    }
+
+    .plot-container {
+      background: white;
+      border-radius: 16px;
+      padding: 1rem;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+      margin-top: 1rem;
+    }
+
+    .select-container {
+      position: relative;
+      display: inline-block;
+      min-width: 150px;
+    }
+
+    .select-container::after {
+      content: '\f107';
+      font-family: 'Font Awesome 6 Free';
+      font-weight: 900;
+      position: absolute;
+      right: 1rem;
+      top: 50%;
+      transform: translateY(-50%);
+      pointer-events: none;
+      color: #667eea;
+    }
+
+    select {
+      appearance: none;
+      -webkit-appearance: none;
+      -moz-appearance: none;
+      padding-right: 3rem;
+    }
+
+    @media (max-width: 768px) {
+      .container {
+        padding: 1rem;
+      }
+
+      .header h1 {
+        font-size: 2rem;
+      }
+
+      .card {
+        padding: 1.5rem;
+      }
+
+      .form-row {
+        grid-template-columns: 1fr;
+        gap: 1rem;
+      }
+
+      .card-header {
+        flex-direction: column;
+        text-align: center;
+        gap: 0.5rem;
+      }
+    }
+
+    .fade-in {
+      animation: fadeIn 0.5s ease-in;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
     }
   </style>
 </head>
 <body>
-  <h2>Interactive Visualization: <code>cp</code> vs <code>X_m</code> by Angle of Attack</h2>
+  <div class="container">
+    <div class="header">
+      <h1><i class="fas fa-plane"></i> Airfoil Analysis</h1>
+      <p>Advanced Pressure Coefficient Prediction & Visualization</p>
+    </div>
 
-  <label for="aoa">Select AoA (deg):</label>
-  <select id="aoa"></select>
+    <div class="card fade-in">
+      <div class="card-header">
+        <i class="fas fa-chart-line"></i>
+        <div>
+          <div class="card-title">Interactive Visualization</div>
+          <p style="margin: 0; color: #718096; font-size: 0.9rem;">cp vs X_m by Angle of Attack</p>
+        </div>
+      </div>
 
-  <div style="margin-top: 2rem;">
-    <h3>Predict cp using the ML model</h3>
-    <p>{{ explanation['x_m'] }}</p>
-    <label for="x_m">X_m:</label>
-    <small>Enter a value between 0.0 and 1.0 (position along the airfoil)</small><br>
-    <input type="number" id="x_m" step="0.01" min="0" max="1" />
+      <div class="form-group">
+        <label for="aoa"><i class="fas fa-angle-up"></i> Select Angle of Attack (degrees):</label>
+        <div class="select-container">
+          <select id="aoa"></select>
+        </div>
+      </div>
 
-    <p>{{ explanation['aoa'] }}</p>
-    <label for="input_aoa">AoA:</label>
-    <small>Typical range: -10° to 30°. AoA affects lift and pressure distribution.</small><br>
-    <input type="number" id="input_aoa" step="1" />
+      <div class="plot-container">
+        <div id="plot"></div>
+      </div>
+    </div>
 
-    <p>{{ explanation['pressure'] }}</p>
-    <label for="pressure">Pressure (Pa):</label>
-    <small>Expected around 100,000 Pa. Use absolute pressure in Pascals.</small><br>
-    <input type="number" id="pressure" step="1" />
+    <div class="card fade-in">
+      <div class="card-header">
+        <i class="fas fa-brain"></i>
+        <div>
+          <div class="card-title">ML Model Prediction</div>
+          <p style="margin: 0; color: #718096; font-size: 0.9rem;">Predict pressure coefficient using trained models</p>
+        </div>
+      </div>
 
-    <button onclick="predictCp()" style="margin-left: 1rem;">Predict</button>
-    <div id="loading" class="loader"></div>
-    <div id="statusMsg" class="status"></div>
-    <div id="predictionResult" style="margin-top: 1rem; font-weight: bold;"></div>
+      <div class="form-row">
+        <div class="form-group">
+          <label for="x_m"><i class="fas fa-ruler-horizontal"></i> X_m (Position):</label>
+          <div class="input-group">
+            <input type="number" id="x_m" step="0.01" min="0" max="1" placeholder="0.5" />
+          </div>
+          <div class="help-text">
+            <i class="fas fa-info-circle"></i>
+            Enter a value between 0.0 and 1.0 (position along the airfoil)
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="input_aoa"><i class="fas fa-angle-up"></i> Angle of Attack:</label>
+          <div class="input-group">
+            <input type="number" id="input_aoa" step="1" placeholder="10" />
+          </div>
+          <div class="help-text">
+            <i class="fas fa-info-circle"></i>
+            Typical range: -10° to 30°. AoA affects lift and pressure distribution
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="pressure"><i class="fas fa-tachometer-alt"></i> Pressure (Pa):</label>
+          <div class="input-group">
+            <input type="number" id="pressure" step="1" placeholder="101325" />
+          </div>
+          <div class="help-text">
+            <i class="fas fa-info-circle"></i>
+            Expected around 100,000 Pa. Use absolute pressure in Pascals
+          </div>
+        </div>
+      </div>
+
+      <div class="loading-container">
+        <button class="btn btn-predict" onclick="predictCp()">
+          <i class="fas fa-calculator"></i>
+          <span id="btn-text">Predict Coefficient</span>
+        </button>
+        <div id="loading" class="loader"></div>
+        <div id="statusMsg" class="status"></div>
+      </div>
+
+      <div id="predictionResult"></div>
+
+      <div class="plot-container" id="mlPlotContainer" style="display: none;">
+        <div id="mlPlot"></div>
+      </div>
+    </div>
   </div>
-
-  <div id="plot" style="margin-top: 30px;"></div>
-  <div id="mlPlot" style="margin-top: 40px;"></div>
 
   <script>
     document.addEventListener("DOMContentLoaded", function () {
@@ -134,7 +447,7 @@
       for (let v of aoaValues) {
         const option = document.createElement("option");
         option.value = v;
-        option.textContent = v;
+        option.textContent = v + "°";
         aoaSelect.appendChild(option);
       }
 
@@ -155,7 +468,7 @@
           .then(res => res.json())
           .then(data => {
             if (data.error) {
-              plotDiv.innerHTML = `<div style='color:red;'>${data.error}</div>`;
+              plotDiv.innerHTML = `<div class="error"><i class="fas fa-exclamation-triangle"></i>${data.error}</div>`;
               return;
             }
             const x = data.map(d => d.X_m);
@@ -167,38 +480,65 @@
               mode: 'markers+lines',
               type: 'scatter',
               name: `AoA ${aoa}°`,
-              marker: { color: '#0074D9' }
+              marker: { 
+                color: '#667eea',
+                size: 6
+              },
+              line: {
+                color: '#667eea',
+                width: 3
+              }
             };
 
             const layout = {
-              title: `cp vs X_m (AoA = ${aoa}°)`,
-              xaxis: { title: "X_m (Position along airfoil)" },
-              yaxis: { title: "cp (Pressure Coefficient)" },
-              margin: { t: 50, l: 50, r: 30, b: 50 }
+              title: {
+                text: `Pressure Coefficient vs Position (AoA = ${aoa}°)`,
+                font: { size: 18, color: '#2d3748' }
+              },
+              xaxis: { 
+                title: "X_m (Position along airfoil)",
+                gridcolor: '#e2e8f0',
+                titlefont: { color: '#4a5568' }
+              },
+              yaxis: { 
+                title: "cp (Pressure Coefficient)",
+                gridcolor: '#e2e8f0',
+                titlefont: { color: '#4a5568' }
+              },
+              margin: { t: 60, l: 60, r: 30, b: 60 },
+              plot_bgcolor: 'white',
+              paper_bgcolor: 'white',
+              font: { family: 'Inter, sans-serif' }
             };
 
-            Plotly.newPlot("plot", [trace], layout);
+            Plotly.newPlot("plot", [trace], layout, {responsive: true});
+          })
+          .catch(err => {
+            plotDiv.innerHTML = `<div class="error"><i class="fas fa-exclamation-triangle"></i>Failed to load data</div>`;
           });
       }
     });
 
     function predictCp() {
       const button = document.querySelector("button[onclick='predictCp()']");
+      const btnText = document.getElementById("btn-text");
+      const loader = document.getElementById("loading");
+      const statusMsg = document.getElementById("statusMsg");
+      const resultDiv = document.getElementById("predictionResult");
+      const mlPlotContainer = document.getElementById("mlPlotContainer");
+      
       button.disabled = true;
-      button.innerText = "Predicting...";
-      document.getElementById("loading").style.display = "inline-block";
-      document.getElementById("statusMsg").innerText = "Loading prediction...";
+      btnText.innerText = "Processing...";
+      loader.style.display = "inline-block";
+      statusMsg.innerHTML = '<i class="fas fa-cog fa-spin"></i>Analyzing data...';
 
       const x_m = document.getElementById("x_m").value;
       const aoa = document.getElementById("input_aoa").value;
       const pressure = document.getElementById("pressure").value;
 
       if (!x_m || !aoa || !pressure) {
-        document.getElementById("loading").style.display = "none";
-        document.getElementById("statusMsg").innerText = "";
-        document.getElementById("predictionResult").innerText = "Please fill all inputs.";
-        button.disabled = false;
-        button.innerText = "Predict";
+        resetButton();
+        resultDiv.innerHTML = '<div class="error"><i class="fas fa-exclamation-triangle"></i>Please fill all input fields.</div>';
         return;
       }
 
@@ -206,47 +546,83 @@
         .then(res => res.json())
         .then(data => {
           if (data.nn_predicted_cp !== undefined && data.gb_predicted_cp !== undefined) {
-            document.getElementById("predictionResult").innerHTML = `
-              <p style="color: green;"><strong>Neural Network cp:</strong> ${data.nn_predicted_cp.toFixed(4)}</p>
-              <p style="color: orange;"><strong>Gradient Boosting cp:</strong> ${data.gb_predicted_cp.toFixed(4)}</p>
+            resultDiv.innerHTML = `
+              <div class="result-container fade-in">
+                <div class="result-item">
+                  <div class="result-icon nn">NN</div>
+                  <div class="result-text">
+                    <div class="result-label">Neural Network Prediction</div>
+                    <div class="result-value nn">${data.nn_predicted_cp.toFixed(6)}</div>
+                  </div>
+                </div>
+                <div class="result-item">
+                  <div class="result-icon gb">GB</div>
+                  <div class="result-text">
+                    <div class="result-label">Gradient Boosting Prediction</div>
+                    <div class="result-value gb">${data.gb_predicted_cp.toFixed(6)}</div>
+                  </div>
+                </div>
+              </div>
             `;
 
+            // Show comparison plot
+            mlPlotContainer.style.display = 'block';
             Plotly.newPlot("mlPlot", [
               {
                 x: [parseFloat(x_m)],
                 y: [data.nn_predicted_cp],
                 mode: 'markers',
-                marker: { size: 12, color: 'green' },
-                name: 'NN Predicted cp'
+                marker: { size: 15, color: '#38a169', symbol: 'circle' },
+                name: 'Neural Network',
+                text: [`NN: ${data.nn_predicted_cp.toFixed(4)}`],
+                textposition: 'top center'
               },
               {
                 x: [parseFloat(x_m)],
                 y: [data.gb_predicted_cp],
                 mode: 'markers',
-                marker: { size: 12, color: 'orange' },
-                name: 'GB Predicted cp'
+                marker: { size: 15, color: '#dd6b20', symbol: 'square' },
+                name: 'Gradient Boosting',
+                text: [`GB: ${data.gb_predicted_cp.toFixed(4)}`],
+                textposition: 'bottom center'
               }
             ], {
-              title: 'Comparison of Predicted cp at given X_m',
-              xaxis: { title: 'X_m' },
-              yaxis: { title: 'cp' },
-              margin: { t: 40, l: 50, r: 30, b: 50 }
-            });
+              title: {
+                text: 'Model Predictions Comparison',
+                font: { size: 16, color: '#2d3748' }
+              },
+              xaxis: { 
+                title: 'X_m (Position)',
+                range: [Math.max(0, parseFloat(x_m) - 0.1), Math.min(1, parseFloat(x_m) + 0.1)],
+                gridcolor: '#e2e8f0'
+              },
+              yaxis: { 
+                title: 'cp (Pressure Coefficient)',
+                gridcolor: '#e2e8f0'
+              },
+              margin: { t: 50, l: 60, r: 30, b: 60 },
+              plot_bgcolor: 'white',
+              paper_bgcolor: 'white',
+              font: { family: 'Inter, sans-serif' }
+            }, {responsive: true});
           } else {
-            document.getElementById("predictionResult").innerText = data.error || "Prediction failed.";
+            resultDiv.innerHTML = `<div class="error"><i class="fas fa-exclamation-triangle"></i>${data.error || "Prediction failed."}</div>`;
+            mlPlotContainer.style.display = 'none';
           }
-          document.getElementById("loading").style.display = "none";
-          document.getElementById("statusMsg").innerText = "";
-          button.disabled = false;
-          button.innerText = "Predict";
+          resetButton();
         })
         .catch(err => {
-          document.getElementById("loading").style.display = "none";
-          document.getElementById("predictionResult").innerText = "Prediction failed due to network or server error.";
-          document.getElementById("statusMsg").innerText = "";
-          button.disabled = false;
-          button.innerText = "Predict";
+          resultDiv.innerHTML = '<div class="error"><i class="fas fa-exclamation-triangle"></i>Prediction failed due to network or server error.</div>';
+          mlPlotContainer.style.display = 'none';
+          resetButton();
         });
+
+      function resetButton() {
+        loader.style.display = "none";
+        statusMsg.innerHTML = "";
+        button.disabled = false;
+        btnText.innerText = "Predict Coefficient";
+      }
     }
   </script>
 </body>
