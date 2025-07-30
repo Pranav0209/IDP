@@ -19,6 +19,36 @@
       min-height: 100vh;
       color: #1a202c;
       line-height: 1.6;
+      transition: all 0.3s ease;
+    }
+
+    /* Dark mode styles */
+    body.dark-mode {
+      background: linear-gradient(135deg, #1a202c 0%, #2d3748 100%);
+      color: #e2e8f0;
+    }
+
+    body.dark-mode .card {
+      background: rgba(45, 55, 72, 0.95);
+      border: 1px solid rgba(255,255,255,0.1);
+    }
+
+    body.dark-mode .card-title {
+      color: #e2e8f0;
+    }
+
+    body.dark-mode label {
+      color: #cbd5e0;
+    }
+
+    body.dark-mode input, body.dark-mode select {
+      background: #4a5568;
+      border-color: #718096;
+      color: #e2e8f0;
+    }
+
+    body.dark-mode .plot-container {
+      background: #4a5568;
     }
 
     .container {
@@ -356,10 +386,177 @@
       background: linear-gradient(135deg, #38a169 0%, #2f855a 100%) !important;
       box-shadow: 0 10px 25px rgba(72, 187, 120, 0.3);
     }
+
+    /* Settings panel */
+    .settings-panel {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(10px);
+      border-radius: 15px;
+      padding: 1rem;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+      z-index: 1000;
+      transition: all 0.3s ease;
+    }
+
+    body.dark-mode .settings-panel {
+      background: rgba(45, 55, 72, 0.95);
+      color: #e2e8f0;
+    }
+
+    .settings-toggle {
+      background: none;
+      border: none;
+      font-size: 1.5rem;
+      cursor: pointer;
+      color: #667eea;
+      transition: all 0.3s ease;
+    }
+
+    body.dark-mode .settings-toggle {
+      color: #81e6d9;
+    }
+
+    .settings-toggle:hover {
+      transform: rotate(90deg);
+    }
+
+    .settings-content {
+      display: none;
+      margin-top: 1rem;
+      min-width: 200px;
+    }
+
+    .settings-content.show {
+      display: block;
+    }
+
+    .setting-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1rem;
+      font-size: 0.9rem;
+    }
+
+    .toggle-switch {
+      position: relative;
+      width: 50px;
+      height: 24px;
+      background: #cbd5e0;
+      border-radius: 12px;
+      cursor: pointer;
+      transition: background 0.3s ease;
+    }
+
+    .toggle-switch.active {
+      background: #48bb78;
+    }
+
+    .toggle-switch::before {
+      content: '';
+      position: absolute;
+      top: 2px;
+      left: 2px;
+      width: 20px;
+      height: 20px;
+      background: white;
+      border-radius: 50%;
+      transition: transform 0.3s ease;
+    }
+
+    .toggle-switch.active::before {
+      transform: translateX(26px);
+    }
+
+    /* Export buttons */
+    .export-section {
+      margin-top: 1rem;
+      display: flex;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+    }
+
+    .export-btn {
+      background: linear-gradient(135deg, #ed8936 0%, #dd6b20 100%);
+      color: white;
+      border: none;
+      padding: 0.5rem 1rem;
+      border-radius: 8px;
+      font-size: 0.9rem;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .export-btn:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 5px 15px rgba(237, 137, 54, 0.3);
+    }
+
+    /* Visualization options */
+    .viz-options {
+      display: flex;
+      gap: 1rem;
+      margin: 1rem 0;
+      flex-wrap: wrap;
+    }
+
+    .viz-option {
+      background: rgba(102, 126, 234, 0.1);
+      border: 2px solid #667eea;
+      color: #667eea;
+      padding: 0.5rem 1rem;
+      border-radius: 20px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      font-size: 0.9rem;
+    }
+
+    .viz-option.active {
+      background: #667eea;
+      color: white;
+    }
+
+    body.dark-mode .viz-option {
+      background: rgba(129, 230, 217, 0.1);
+      border-color: #81e6d9;
+      color: #81e6d9;
+    }
+
+    body.dark-mode .viz-option.active {
+      background: #81e6d9;
+      color: #1a202c;
+    }
   </style>
 </head>
 <body>
   <div class="container">
+    <!-- Settings Panel -->
+    <div class="settings-panel">
+      <button class="settings-toggle" onclick="toggleSettings()">
+        <i class="fas fa-cog"></i>
+      </button>
+      <div class="settings-content" id="settingsContent">
+        <div class="setting-item">
+          <span>Dark Mode</span>
+          <div class="toggle-switch" id="darkModeToggle" onclick="toggleDarkMode()"></div>
+        </div>
+        <div class="setting-item">
+          <span>Auto-export</span>
+          <div class="toggle-switch" id="autoExportToggle" onclick="toggleAutoExport()"></div>
+        </div>
+        <div class="setting-item">
+          <span>Grid Lines</span>
+          <div class="toggle-switch active" id="gridToggle" onclick="toggleGrid()"></div>
+        </div>
+      </div>
+    </div>
+
     <div class="header">
       <h1><i class="fas fa-plane"></i> Airfoil Analysis</h1>
       <p>Advanced Pressure Coefficient Prediction & Visualization</p>
@@ -372,6 +569,10 @@
         <a href="/prediction" class="nav-btn primary" style="background: linear-gradient(135deg, #48bb78 0%, #38a169 100%); color: white; border: none; padding: 0.75rem 1.5rem; border-radius: 50px; font-weight: 600; text-decoration: none; display: inline-flex; align-items: center; gap: 0.5rem; transition: all 0.3s ease;">
           <i class="fas fa-chart-line"></i>
           Analysis Tool
+        </a>
+        <a href="/ml-stats" class="nav-btn" style="background: rgba(255, 255, 255, 0.15); backdrop-filter: blur(10px); color: white; border: 2px solid rgba(255, 255, 255, 0.3); padding: 0.75rem 1.5rem; border-radius: 50px; font-weight: 600; text-decoration: none; display: inline-flex; align-items: center; gap: 0.5rem; transition: all 0.3s ease;">
+          <i class="fas fa-chart-bar"></i>
+          ML Statistics
         </a>
       </div>
     </div>
@@ -392,8 +593,39 @@
         </div>
       </div>
 
+      <!-- Visualization Options -->
+      <div class="viz-options">
+        <div class="viz-option active" data-type="line" onclick="changeVisualization('line')">
+          <i class="fas fa-chart-line"></i> Line Plot
+        </div>
+        <div class="viz-option" data-type="scatter" onclick="changeVisualization('scatter')">
+          <i class="fas fa-braille"></i> Scatter Plot
+        </div>
+        <div class="viz-option" data-type="area" onclick="changeVisualization('area')">
+          <i class="fas fa-chart-area"></i> Area Plot
+        </div>
+        <div class="viz-option" data-type="bar" onclick="changeVisualization('bar')">
+          <i class="fas fa-chart-bar"></i> Bar Chart
+        </div>
+      </div>
+
       <div class="plot-container">
         <div id="plot"></div>
+        <!-- Export buttons -->
+        <div class="export-section">
+          <button class="export-btn" onclick="exportData('csv')">
+            <i class="fas fa-file-csv"></i> Export CSV
+          </button>
+          <button class="export-btn" onclick="exportData('json')">
+            <i class="fas fa-code"></i> Export JSON
+          </button>
+          <button class="export-btn" onclick="exportPlot('png')">
+            <i class="fas fa-image"></i> Export PNG
+          </button>
+          <button class="export-btn" onclick="exportPlot('pdf')">
+            <i class="fas fa-file-pdf"></i> Export PDF
+          </button>
+        </div>
       </div>
     </div>
 
@@ -454,12 +686,28 @@
 
       <div class="plot-container" id="mlPlotContainer" style="display: none;">
         <div id="mlPlot"></div>
+        <div class="export-section">
+          <button class="export-btn" onclick="exportPredictionData('csv')">
+            <i class="fas fa-file-csv"></i> Export Predictions CSV
+          </button>
+          <button class="export-btn" onclick="exportPredictionData('json')">
+            <i class="fas fa-code"></i> Export Predictions JSON
+          </button>
+        </div>
       </div>
     </div>
   </div>
 
   <script>
+    // Global variables
+    let currentData = [];
+    let currentVisualization = 'line';
+    let showGrid = true;
+
     document.addEventListener("DOMContentLoaded", function () {
+      // Load user preferences
+      loadPreferences();
+      
       // Pass aoa_values from Flask to JS using a script tag with JSON
       const aoaValues = JSON.parse('{{ aoa_values | tojson | safe }}');
       const aoaSelect = document.getElementById("aoa");
@@ -483,63 +731,333 @@
         loadPlot(aoaSelect.value);
       });
 
-      // Fetch and plot data
-      function loadPlot(aoa) {
-        if (!aoa) return; // Prevent empty aoa fetch
-        fetch(`/get_cp_data?aoa=${encodeURIComponent(aoa)}`)
-          .then(res => res.json())
-          .then(data => {
-            if (data.error) {
-              plotDiv.innerHTML = `<div class="error"><i class="fas fa-exclamation-triangle"></i>${data.error}</div>`;
-              return;
-            }
-            const x = data.map(d => d.X_m);
-            const y = data.map(d => d.cp);
+      // Settings panel functionality
+      setupSettingsPanel();
+    });
 
-            const trace = {
-              x: x,
-              y: y,
-              mode: 'markers+lines',
-              type: 'scatter',
-              name: `AoA ${aoa}°`,
-              marker: { 
-                color: '#667eea',
-                size: 6
-              },
-              line: {
-                color: '#667eea',
-                width: 3
-              }
+    // Settings functionality
+    function toggleSettings() {
+      const content = document.getElementById('settingsContent');
+      content.classList.toggle('show');
+    }
+
+    function toggleDarkMode() {
+      const toggle = document.getElementById('darkModeToggle');
+      const body = document.body;
+      
+      toggle.classList.toggle('active');
+      body.classList.toggle('dark-mode');
+      
+      localStorage.setItem('darkMode', body.classList.contains('dark-mode'));
+      
+      // Redraw plot with new theme
+      if (currentData.length > 0) {
+        redrawPlot();
+      }
+    }
+
+    function toggleAutoExport() {
+      const toggle = document.getElementById('autoExportToggle');
+      toggle.classList.toggle('active');
+      localStorage.setItem('autoExport', toggle.classList.contains('active'));
+    }
+
+    function toggleGrid() {
+      const toggle = document.getElementById('gridToggle');
+      toggle.classList.toggle('active');
+      showGrid = toggle.classList.contains('active');
+      localStorage.setItem('showGrid', showGrid);
+      
+      if (currentData.length > 0) {
+        redrawPlot();
+      }
+    }
+
+    function loadPreferences() {
+      // Load dark mode
+      const darkMode = localStorage.getItem('darkMode') === 'true';
+      if (darkMode) {
+        document.body.classList.add('dark-mode');
+        document.getElementById('darkModeToggle').classList.add('active');
+      }
+
+      // Load auto-export
+      const autoExport = localStorage.getItem('autoExport') === 'true';
+      if (autoExport) {
+        document.getElementById('autoExportToggle').classList.add('active');
+      }
+
+      // Load grid preference
+      showGrid = localStorage.getItem('showGrid') !== 'false';
+      if (!showGrid) {
+        document.getElementById('gridToggle').classList.remove('active');
+      }
+    }
+
+    function setupSettingsPanel() {
+      document.addEventListener('click', function(e) {
+        const panel = document.querySelector('.settings-panel');
+        const content = document.getElementById('settingsContent');
+        if (!panel.contains(e.target) && content.classList.contains('show')) {
+          content.classList.remove('show');
+        }
+      });
+    }
+
+    // Visualization functions
+    function changeVisualization(type) {
+      // Update active visualization option
+      document.querySelectorAll('.viz-option').forEach(opt => opt.classList.remove('active'));
+      document.querySelector(`[data-type="${type}"]`).classList.add('active');
+      
+      currentVisualization = type;
+      localStorage.setItem('vizType', type);
+      
+      if (currentData.length > 0) {
+        redrawPlot();
+      }
+    }
+
+    function getPlotConfig() {
+      const isDark = document.body.classList.contains('dark-mode');
+      const bgColor = isDark ? '#4a5568' : 'white';
+      const textColor = isDark ? '#e2e8f0' : '#2d3748';
+      const gridColor = isDark ? '#718096' : '#e2e8f0';
+
+      return {
+        plot_bgcolor: bgColor,
+        paper_bgcolor: bgColor,
+        font: { 
+          family: 'Inter, sans-serif',
+          color: textColor
+        },
+        showGrid: showGrid,
+        gridColor: gridColor
+      };
+    }
+
+    // Fetch and plot data
+    function loadPlot(aoa) {
+      if (!aoa) return;
+      
+      fetch(`/get_cp_data?aoa=${encodeURIComponent(aoa)}`)
+        .then(res => res.json())
+        .then(data => {
+          if (data.error) {
+            document.getElementById("plot").innerHTML = `<div class="error"><i class="fas fa-exclamation-triangle"></i>${data.error}</div>`;
+            return;
+          }
+          
+          currentData = data;
+          redrawPlot();
+          
+          // Auto-export if enabled
+          if (document.getElementById('autoExportToggle').classList.contains('active')) {
+            setTimeout(() => exportData('csv'), 1000);
+          }
+        })
+        .catch(err => {
+          document.getElementById("plot").innerHTML = `<div class="error"><i class="fas fa-exclamation-triangle"></i>Failed to load data</div>`;
+        });
+    }
+
+    function redrawPlot() {
+      if (currentData.length === 0) return;
+
+      const x = currentData.map(d => d.X_m);
+      const y = currentData.map(d => d.cp);
+      const aoa = document.getElementById("aoa").value;
+      const config = getPlotConfig();
+
+      let trace;
+      switch (currentVisualization) {
+        case 'scatter':
+          trace = {
+            x: x, y: y,
+            mode: 'markers',
+            type: 'scatter',
+            name: `AoA ${aoa}°`,
+            marker: { color: '#667eea', size: 8 }
+          };
+          break;
+        case 'area':
+          trace = {
+            x: x, y: y,
+            fill: 'tonexty',
+            type: 'scatter',
+            name: `AoA ${aoa}°`,
+            fillcolor: 'rgba(102, 126, 234, 0.3)',
+            line: { color: '#667eea' }
+          };
+          break;
+        case 'bar':
+          trace = {
+            x: x, y: y,
+            type: 'bar',
+            name: `AoA ${aoa}°`,
+            marker: { color: '#667eea' }
+          };
+          break;
+        default: // line
+          trace = {
+            x: x, y: y,
+            mode: 'markers+lines',
+            type: 'scatter',
+            name: `AoA ${aoa}°`,
+            marker: { color: '#667eea', size: 6 },
+            line: { color: '#667eea', width: 3 }
+          };
+      }
+
+      const layout = {
+        title: {
+          text: `Pressure Coefficient vs Position (AoA = ${aoa}°)`,
+          font: { size: 18, color: config.font.color }
+        },
+        xaxis: { 
+          title: "X_m (Position along airfoil)",
+          gridcolor: config.showGrid ? config.gridColor : 'transparent',
+          titlefont: { color: config.font.color }
+        },
+        yaxis: { 
+          title: "cp (Pressure Coefficient)",
+          gridcolor: config.showGrid ? config.gridColor : 'transparent',
+          titlefont: { color: config.font.color }
+        },
+        margin: { t: 60, l: 60, r: 30, b: 60 },
+        plot_bgcolor: config.plot_bgcolor,
+        paper_bgcolor: config.paper_bgcolor,
+        font: config.font
+      };
+
+      Plotly.newPlot("plot", [trace], layout, {responsive: true});
+    }
+
+    // Export functions
+    function exportData(format) {
+      if (currentData.length === 0) {
+        alert('No data to export. Please select an angle of attack first.');
+        return;
+      }
+
+      const aoa = document.getElementById("aoa").value;
+      
+      if (format === 'csv') {
+        let csv = 'X_m,cp\\n';
+        currentData.forEach(row => {
+          csv += `${row.X_m},${row.cp}\\n`;
+        });
+        
+        const blob = new Blob([csv], { type: 'text/csv' });
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `airfoil_data_aoa_${aoa}.csv`;
+        a.click();
+      } else if (format === 'json') {
+        const jsonData = {
+          angle_of_attack: aoa,
+          data: currentData,
+          exported_at: new Date().toISOString()
+        };
+        
+        const blob = new Blob([JSON.stringify(jsonData, null, 2)], { type: 'application/json' });
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `airfoil_data_aoa_${aoa}.json`;
+        a.click();
+      }
+    }
+
+    function exportPlot(format) {
+      const plotDiv = document.getElementById('plot');
+      
+      if (format === 'png') {
+        Plotly.toImage(plotDiv, {format: 'png', width: 1200, height: 800})
+          .then(dataUrl => {
+            const a = document.createElement('a');
+            a.href = dataUrl;
+            a.download = `airfoil_plot_aoa_${document.getElementById("aoa").value}.png`;
+            a.click();
+          });
+      } else if (format === 'pdf') {
+        // For PDF, we'll use the PNG and convert (simplified approach)
+        Plotly.toImage(plotDiv, {format: 'png', width: 1200, height: 800})
+          .then(dataUrl => {
+            // Create a simple PDF with the image
+            const canvas = document.createElement('canvas');
+            const ctx = canvas.getContext('2d');
+            const img = new Image();
+            img.onload = function() {
+              canvas.width = img.width;
+              canvas.height = img.height;
+              ctx.drawImage(img, 0, 0);
+              
+              // Convert to PDF would require jsPDF library
+              // For now, we'll download as high-quality PNG
+              const a = document.createElement('a');
+              a.href = dataUrl;
+              a.download = `airfoil_plot_aoa_${document.getElementById("aoa").value}_hq.png`;
+              a.click();
             };
-
-            const layout = {
-              title: {
-                text: `Pressure Coefficient vs Position (AoA = ${aoa}°)`,
-                font: { size: 18, color: '#2d3748' }
-              },
-              xaxis: { 
-                title: "X_m (Position along airfoil)",
-                gridcolor: '#e2e8f0',
-                titlefont: { color: '#4a5568' }
-              },
-              yaxis: { 
-                title: "cp (Pressure Coefficient)",
-                gridcolor: '#e2e8f0',
-                titlefont: { color: '#4a5568' }
-              },
-              margin: { t: 60, l: 60, r: 30, b: 60 },
-              plot_bgcolor: 'white',
-              paper_bgcolor: 'white',
-              font: { family: 'Inter, sans-serif' }
-            };
-
-            Plotly.newPlot("plot", [trace], layout, {responsive: true});
-          })
-          .catch(err => {
-            plotDiv.innerHTML = `<div class="error"><i class="fas fa-exclamation-triangle"></i>Failed to load data</div>`;
+            img.src = dataUrl;
           });
       }
-    });
+    }
+
+    // Export prediction data
+    function exportPredictionData(format) {
+      const x_m = document.getElementById("x_m").value;
+      const aoa = document.getElementById("input_aoa").value;
+      const pressure = document.getElementById("pressure").value;
+      
+      // Get current prediction results
+      const nnResult = document.querySelector('.result-value.nn');
+      const gbResult = document.querySelector('.result-value.gb');
+      
+      if (!nnResult || !gbResult) {
+        alert('No prediction results to export. Please make a prediction first.');
+        return;
+      }
+
+      const predictionData = {
+        inputs: {
+          x_m: parseFloat(x_m),
+          angle_of_attack: parseFloat(aoa),
+          pressure_pa: parseFloat(pressure)
+        },
+        predictions: {
+          neural_network: parseFloat(nnResult.textContent),
+          gradient_boosting: parseFloat(gbResult.textContent)
+        },
+        timestamp: new Date().toISOString()
+      };
+
+      if (format === 'csv') {
+        let csv = 'Parameter,Value\\n';
+        csv += `X_m,${predictionData.inputs.x_m}\\n`;
+        csv += `Angle_of_Attack,${predictionData.inputs.angle_of_attack}\\n`;
+        csv += `Pressure_Pa,${predictionData.inputs.pressure_pa}\\n`;
+        csv += `NN_Prediction,${predictionData.predictions.neural_network}\\n`;
+        csv += `GB_Prediction,${predictionData.predictions.gradient_boosting}\\n`;
+        csv += `Timestamp,${predictionData.timestamp}\\n`;
+        
+        const blob = new Blob([csv], { type: 'text/csv' });
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `prediction_results_${Date.now()}.csv`;
+        a.click();
+      } else if (format === 'json') {
+        const blob = new Blob([JSON.stringify(predictionData, null, 2)], { type: 'application/json' });
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `prediction_results_${Date.now()}.json`;
+        a.click();
+      }
+    }
 
     function predictCp() {
       const button = document.querySelector("button[onclick='predictCp()']");

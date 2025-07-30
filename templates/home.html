@@ -18,6 +18,49 @@
       min-height: 100vh;
       color: #1a202c;
       line-height: 1.7;
+      transition: all 0.3s ease;
+    }
+
+    /* Dark mode styles */
+    body.dark-mode {
+      background: linear-gradient(135deg, #1a202c 0%, #2d3748 100%);
+      color: #e2e8f0;
+    }
+
+    body.dark-mode .card {
+      background: rgba(45, 55, 72, 0.95);
+      border: 1px solid rgba(255,255,255,0.1);
+    }
+
+    body.dark-mode .card-title {
+      color: #e2e8f0;
+    }
+
+    body.dark-mode .section-content {
+      color: #cbd5e0;
+    }
+
+    body.dark-mode .feature-item {
+      background: #4a5568;
+    }
+
+    body.dark-mode .feature-item h4 {
+      color: #e2e8f0;
+    }
+
+    body.dark-mode .feature-item p {
+      color: #a0aec0;
+    }
+
+    body.dark-mode .equation {
+      background: #4a5568;
+      border-color: #718096;
+      color: #e2e8f0;
+    }
+
+    body.dark-mode .highlight-box {
+      background: linear-gradient(135deg, #4a5568 0%, #2d3748 100%);
+      border-left-color: #81e6d9;
     }
 
     .container {
@@ -259,10 +302,213 @@
       from { opacity: 0; transform: translateY(30px); }
       to { opacity: 1; transform: translateY(0); }
     }
+
+    /* Settings panel */
+    .settings-panel {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(10px);
+      border-radius: 15px;
+      padding: 1rem;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+      z-index: 1000;
+      transition: all 0.3s ease;
+    }
+
+    body.dark-mode .settings-panel {
+      background: rgba(45, 55, 72, 0.95);
+      color: #e2e8f0;
+    }
+
+    .settings-toggle {
+      background: none;
+      border: none;
+      font-size: 1.5rem;
+      cursor: pointer;
+      color: #667eea;
+      transition: all 0.3s ease;
+    }
+
+    body.dark-mode .settings-toggle {
+      color: #81e6d9;
+    }
+
+    .settings-toggle:hover {
+      transform: rotate(90deg);
+    }
+
+    .settings-content {
+      display: none;
+      margin-top: 1rem;
+      min-width: 200px;
+    }
+
+    .settings-content.show {
+      display: block;
+    }
+
+    .setting-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1rem;
+      font-size: 0.9rem;
+    }
+
+    .toggle-switch {
+      position: relative;
+      width: 50px;
+      height: 24px;
+      background: #cbd5e0;
+      border-radius: 12px;
+      cursor: pointer;
+      transition: background 0.3s ease;
+    }
+
+    .toggle-switch.active {
+      background: #48bb78;
+    }
+
+    .toggle-switch::before {
+      content: '';
+      position: absolute;
+      top: 2px;
+      left: 2px;
+      width: 20px;
+      height: 20px;
+      background: white;
+      border-radius: 50%;
+      transition: transform 0.3s ease;
+    }
+
+    .toggle-switch.active::before {
+      transform: translateX(26px);
+    }
+
+    /* FAQ Styles */
+    .faq-container {
+      margin-top: 1rem;
+    }
+
+    .faq-item {
+      border: 1px solid #e2e8f0;
+      border-radius: 12px;
+      margin-bottom: 1rem;
+      overflow: hidden;
+      transition: all 0.3s ease;
+    }
+
+    body.dark-mode .faq-item {
+      border-color: #4a5568;
+    }
+
+    .faq-item:hover {
+      box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+    }
+
+    body.dark-mode .faq-item:hover {
+      box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+    }
+
+    .faq-question {
+      padding: 1.25rem;
+      cursor: pointer;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: #f8f9fa;
+      transition: all 0.3s ease;
+      user-select: none;
+    }
+
+    body.dark-mode .faq-question {
+      background: #4a5568;
+      color: #e2e8f0;
+    }
+
+    .faq-question:hover {
+      background: #e9ecef;
+    }
+
+    body.dark-mode .faq-question:hover {
+      background: #5a6578;
+    }
+
+    .faq-question span {
+      font-weight: 600;
+      font-size: 1rem;
+      flex: 1;
+      margin-right: 1rem;
+    }
+
+    .faq-question i {
+      color: #667eea;
+      transition: transform 0.3s ease;
+      font-size: 0.9rem;
+    }
+
+    body.dark-mode .faq-question i {
+      color: #81e6d9;
+    }
+
+    .faq-question.active i {
+      transform: rotate(180deg);
+    }
+
+    .faq-answer {
+      padding: 0 1.25rem;
+      max-height: 0;
+      overflow: hidden;
+      transition: all 0.3s ease;
+      background: white;
+    }
+
+    body.dark-mode .faq-answer {
+      background: #2d3748;
+    }
+
+    .faq-answer.show {
+      padding: 1.25rem;
+      max-height: 500px;
+    }
+
+    .faq-answer p {
+      margin: 0;
+      font-size: 0.95rem;
+      line-height: 1.6;
+      color: #4a5568;
+    }
+
+    body.dark-mode .faq-answer p {
+      color: #cbd5e0;
+    }
   </style>
 </head>
 <body>
   <div class="container">
+    <!-- Settings Panel -->
+    <div class="settings-panel">
+      <button class="settings-toggle" onclick="toggleSettings()">
+        <i class="fas fa-cog"></i>
+      </button>
+      <div class="settings-content" id="settingsContent">
+        <div class="setting-item">
+          <span>Dark Mode</span>
+          <div class="toggle-switch" id="darkModeToggle" onclick="toggleDarkMode()"></div>
+        </div>
+        <div class="setting-item">
+          <span>Animations</span>
+          <div class="toggle-switch active" id="animationsToggle" onclick="toggleAnimations()"></div>
+        </div>
+        <div class="setting-item">
+          <span>Auto-save</span>
+          <div class="toggle-switch active" id="autosaveToggle" onclick="toggleAutosave()"></div>
+        </div>
+      </div>
+    </div>
+
     <div class="header">
       <h1><i class="fas fa-bolt"></i> DBD Plasma Actuators</h1>
       <p class="subtitle">Design and Control for Advanced Flow Manipulation</p>
@@ -276,6 +522,10 @@
           <i class="fas fa-chart-line"></i>
           Airfoil Analysis Tool
         </a>
+        <a href="/ml-stats" class="nav-btn">
+          <i class="fas fa-chart-bar"></i>
+          ML Statistics
+        </a>
       </div>
     </div>
 
@@ -286,7 +536,7 @@
       </div>
       <div class="section-content">
         <p>
-          <strong>Dielectric Barrier Discharge (DBD) plasma actuators</strong> are compact devices that generate a "plasma wind" to influence airflow over surfaces. In a typical DBD actuator, two electrodes (one exposed, one buried) are separated by a dielectric film. Applying a high-frequency (≈10–20 kHz) AC voltage (kilovolts) causes nearby air molecules to ionize.
+          <strong>Dielectric Barrier Discharge (DBD) plasma actuators</strong> are compact devices that generate a "plasma" to influence airflow over surfaces. In a typical DBD actuator, two electrodes (one exposed, one buried) are separated by a dielectric film. Applying a high-frequency (≈10–20 kHz) AC voltage (kilovolts) causes nearby air molecules to ionize.
         </p>
         <p>
           The resulting ions accelerate along the electrode edges, imparting momentum to neutral air and creating a thin "wall-jet" flow (electrohydrodynamic or EHD force) above the surface. This plasma-induced flow can re-energize a low-speed boundary layer, delaying flow separation and stall on a wing (e.g. a NACA 0015 airfoil) and thus enhancing lift.
@@ -409,6 +659,156 @@
       </div>
     </div>
 
+    <div class="card fade-in">
+      <div class="card-header">
+        <i class="fas fa-question-circle"></i>
+        <div class="card-title">Frequently Asked Questions</div>
+      </div>
+      <div class="section-content">
+        <div class="faq-container">
+          <div class="faq-item">
+            <div class="faq-question" onclick="toggleFaq(this)">
+              <span>What is a Dielectric Barrier Discharge (DBD) plasma actuator and how does it create airflow?</span>
+              <i class="fas fa-chevron-down"></i>
+            </div>
+            <div class="faq-answer">
+              <p>It is a surface-mounted device with two electrodes separated by a dielectric film. An AC voltage (~kV, ~10 kHz) applied between the electrodes ionizes the air, creating a plasma sheath. The electric field accelerates ions tangentially along the surface. Collisions between ions and neutral air molecules induce a "wind" (EHD force) that adds momentum to the boundary layer. This ionic wind can delay flow separation on the wing.</p>
+            </div>
+          </div>
+
+          <div class="faq-item">
+            <div class="faq-question" onclick="toggleFaq(this)">
+              <span>Why use a high-frequency AC (not DC) in a DBD actuator?</span>
+              <i class="fas fa-chevron-down"></i>
+            </div>
+            <div class="faq-answer">
+              <p>AC ensures that the dielectric barrier charges and discharges repeatedly, preventing a continuous DC arc (which would damage the film). High frequency (~10 kHz) ensures rapid charging cycles, generating many plasma pulses while still modeling quasi-statically. Each half-cycle produces streamers or microdischarges, and the asymmetry between positive/negative pulses gives a net time-averaged force.</p>
+            </div>
+          </div>
+
+          <div class="faq-item">
+            <div class="faq-question" onclick="toggleFaq(this)">
+              <span>Which equations govern the plasma actuator's operation?</span>
+              <i class="fas fa-chevron-down"></i>
+            </div>
+            <div class="faq-answer">
+              <p>Maxwell's equations govern the fields (here mainly ∇·E=ρₑ/ε₀) and Poisson's equation gives the potential from the charge distribution. Charge conservation is given by ∂ρₑ/∂t + ∇·J = 0. The drift-diffusion equation models current Jᵢ = q nᵢ μᵢ E – q Dᵢ ∇nᵢ for each charge species. The EHD body force is F = ρₑ E. Finally, Navier–Stokes (ρ(∂u/∂t + u·∇u)= –∇p + μ∇²u + F) describes how that force affects fluid flow.</p>
+            </div>
+          </div>
+
+          <div class="faq-item">
+            <div class="faq-question" onclick="toggleFaq(this)">
+              <span>What are the key parameters and results of the simulation?</span>
+              <i class="fas fa-chevron-down"></i>
+            </div>
+            <div class="faq-answer">
+              <p>In COMSOL, the exposed electrode was driven up to ~8 kV, yielding peak electric fields >10⁶ V/m at electrode edges and an ionized sheath along the dielectric. The EHD force there reached ~10⁵–10⁶ N/m³. Injecting this force in ANSYS Fluent produced a wall-jet flow: near-surface velocities of ~4–9 m/s at 5–8 kV. Fluent also showed improved pressure distribution (less low-pressure region where flow would separate) and increased lift at high angles of attack when plasma was on.</p>
+            </div>
+          </div>
+
+          <div class="faq-item">
+            <div class="faq-question" onclick="toggleFaq(this)">
+              <span>Why a full-bridge inverter rather than a half-bridge?</span>
+              <i class="fas fa-chevron-down"></i>
+            </div>
+            <div class="faq-answer">
+              <p>A full-bridge (H-bridge) can generate ±V_DC across the load, doubling the voltage swing compared to a half-bridge. Since plasma actuation requires high voltage, maximizing the drive voltage is desirable. The full-bridge also allows precise control of the waveform polarity, useful for symmetric discharge.</p>
+            </div>
+          </div>
+
+          <div class="faq-item">
+            <div class="faq-question" onclick="toggleFaq(this)">
+              <span>How does the gate driver ensure safe switching of the MOSFETs?</span>
+              <i class="fas fa-chevron-down"></i>
+            </div>
+            <div class="faq-answer">
+              <p>The gate driver uses a comparator-based PWM: a high-frequency sine and a reference triangle produce alternating pulses. This ensures that only one diagonal pair conducts at a time (M1+M2 or M3+M4). Cross-conduction (shoot-through) is prevented by timing the pulses so that no two MOSFETs in the same leg turn on simultaneously. Additionally, gates could use dead-time (brief off interval) if needed.</p>
+            </div>
+          </div>
+
+          <div class="faq-item">
+            <div class="faq-question" onclick="toggleFaq(this)">
+              <span>What role does the high-frequency transformer play?</span>
+              <i class="fas fa-chevron-down"></i>
+            </div>
+            <div class="faq-answer">
+              <p>It steps up the inverter's low-voltage AC to the kilovolt range needed. The design targets ~8–16 kV output by choosing an appropriate turns ratio (~1:~330 in the example). The ferrite core (ETD type) is chosen for low loss at 10 kHz. Without the transformer, the plasma could not ignite because the electric field would be too weak.</p>
+            </div>
+          </div>
+
+          <div class="faq-item">
+            <div class="faq-question" onclick="toggleFaq(this)">
+              <span>Why is thermal monitoring needed, and how is it implemented?</span>
+              <i class="fas fa-chevron-down"></i>
+            </div>
+            <div class="faq-answer">
+              <p>Power electronics (MOSFETs, transformer) generate heat during operation. Excessive temperature can damage components or change behavior. The thermal board uses NTC sensors to measure temperatures, a 555 timer + counter + multiplexer to read many sensors in sequence, and logic to alert when a threshold is passed. A PMOS acts as a reverse-current blocker and controlled switch on the +5V rail. This hardwired system (no microcontroller for scanning) provides robust, low-latency protection.</p>
+            </div>
+          </div>
+
+          <div class="faq-item">
+            <div class="faq-question" onclick="toggleFaq(this)">
+              <span>How were simulations set up in COMSOL and ANSYS?</span>
+              <i class="fas fa-chevron-down"></i>
+            </div>
+            <div class="faq-answer">
+              <p>In COMSOL, a section of dielectric (80 mm×3 mm) was modeled with a top electrode (5 mm wide) and buried electrode (8 mm wide). The exposed electrode was driven with a sinusoidal high voltage, and plasma physics models (drift-diffusion + Poisson, with reaction rates from LXCAT) were used to compute charge and fields. In ANSYS Fluent, a 3D wing (NACA0015) in a flow of 10 m/s was simulated (k–ω SST turbulence, steady solution). The COMSOL-derived EHD forces were imposed on the wing surface as a source term, allowing Fluent to compute the overall flow and pressure.</p>
+            </div>
+          </div>
+
+          <div class="faq-item">
+            <div class="faq-question" onclick="toggleFaq(this)">
+              <span>What improvements were seen in aerodynamic performance?</span>
+              <i class="fas fa-chevron-down"></i>
+            </div>
+            <div class="faq-answer">
+              <p>With the plasma on, the simulations and experiments showed more attached flow at high angle of attack. Pressure distribution plots indicated delayed stall: regions of low pressure on the suction side shrank. Plots of lift (C_L) versus AoA showed higher maximum lift, and lift-to-drag ratio (C_L/C_D) curves were elevated with plasma, especially near the stall onset angles. Qualitatively, smoke visualization in the experiment confirmed the flow remained attached over a longer portion of the wing.</p>
+            </div>
+          </div>
+
+          <div class="faq-item">
+            <div class="faq-question" onclick="toggleFaq(this)">
+              <span>How is the web interface used and what does it display?</span>
+              <i class="fas fa-chevron-down"></i>
+            </div>
+            <div class="faq-answer">
+              <p>A user enters the location along the chord, AoA, and pressure into a form. The interface validates inputs and then displays the predicted pressure coefficient (C_p) at that point. It plots two curves (from two different ML models) of C_p vs. position for that AoA, overlaid for comparison. It also can show historical CFD-based plots for context. The front end (HTML/JS) uses responsive design and interactive plots, while Flask on the backend runs the trained models to generate the predictions.</p>
+            </div>
+          </div>
+
+          <div class="faq-item">
+            <div class="faq-question" onclick="toggleFaq(this)">
+              <span>What machine learning models were used and what did they predict?</span>
+              <i class="fas fa-chevron-down"></i>
+            </div>
+            <div class="faq-answer">
+              <p>A feedforward neural network and a gradient boosting regressor were trained to predict the pressure coefficient C_p given inputs (normalized chordwise location, AoA, static pressure). They were trained on CFD data from the Fluent simulations. The final model accuracies were R² ≈ 0.98 (very good). These models allow very fast prediction of pressure distributions for use in the web interface.</p>
+            </div>
+          </div>
+
+          <div class="faq-item">
+            <div class="faq-question" onclick="toggleFaq(this)">
+              <span>What challenges were encountered in the project?</span>
+              <i class="fas fa-chevron-down"></i>
+            </div>
+            <div class="faq-answer">
+              <p>Key challenges include: generating sufficient ionization at practical voltages (current actuators work well only below ~25 m/s free-stream, higher speeds require more power); managing high-voltage safety and EMI; preventing thermal overload in the electronics; and validating simulations with experiments (e.g., aligning the numerical EHD force with measured flow). Designing the transformer and gate driver to minimize losses and handle the switching frequency is nontrivial. Ensuring the thermal board reliably scans all sensors without missing any spot also required careful design.</p>
+            </div>
+          </div>
+
+          <div class="faq-item">
+            <div class="faq-question" onclick="toggleFaq(this)">
+              <span>How do the electric and fluid systems integrate in active flow control?</span>
+              <i class="fas fa-chevron-down"></i>
+            </div>
+            <div class="faq-answer">
+              <p>The inverter/transformer power supply is the hardware "muscle" that creates the plasma; it's designed and tested (via PSIM) to deliver the correct waveform safely. The thermal board is the safety monitor. On the other side, the COMSOL/Fluent simulations represent the theoretical "muscle training," showing how strong the plasma wind can be and how the wing benefits. The fabricated wing and smoke tests are the reality check. Finally, the ML/web interface ties it all together for easy interpretation. Each part—from Maxwell's equations and Navier–Stokes to MOSFET switching and user interfaces—plays a role in the complete system of active aerodynamic control.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
     <div class="demo-section fade-in">
       <h3><i class="fas fa-rocket"></i> Interactive Analysis Tool</h3>
       <p>
@@ -421,5 +821,105 @@
       </a>
     </div>
   </div>
+
+  <script>
+    // FAQ functionality
+    function toggleFaq(questionElement) {
+      const faqItem = questionElement.parentElement;
+      const answer = faqItem.querySelector('.faq-answer');
+      const isActive = questionElement.classList.contains('active');
+      
+      // Close all other FAQ items
+      document.querySelectorAll('.faq-question.active').forEach(activeQuestion => {
+        if (activeQuestion !== questionElement) {
+          activeQuestion.classList.remove('active');
+          activeQuestion.parentElement.querySelector('.faq-answer').classList.remove('show');
+        }
+      });
+      
+      // Toggle current FAQ item
+      if (isActive) {
+        questionElement.classList.remove('active');
+        answer.classList.remove('show');
+      } else {
+        questionElement.classList.add('active');
+        answer.classList.add('show');
+      }
+    }
+
+    // Settings functionality
+    function toggleSettings() {
+      const content = document.getElementById('settingsContent');
+      content.classList.toggle('show');
+    }
+
+    function toggleDarkMode() {
+      const toggle = document.getElementById('darkModeToggle');
+      const body = document.body;
+      
+      toggle.classList.toggle('active');
+      body.classList.toggle('dark-mode');
+      
+      // Save preference
+      localStorage.setItem('darkMode', body.classList.contains('dark-mode'));
+    }
+
+    function toggleAnimations() {
+      const toggle = document.getElementById('animationsToggle');
+      toggle.classList.toggle('active');
+      
+      const animationsEnabled = toggle.classList.contains('active');
+      localStorage.setItem('animations', animationsEnabled);
+      
+      // Apply/remove animation classes
+      const fadeElements = document.querySelectorAll('.fade-in');
+      fadeElements.forEach(el => {
+        if (animationsEnabled) {
+          el.style.animation = 'fadeIn 0.6s ease-in';
+        } else {
+          el.style.animation = 'none';
+        }
+      });
+    }
+
+    function toggleAutosave() {
+      const toggle = document.getElementById('autosaveToggle');
+      toggle.classList.toggle('active');
+      localStorage.setItem('autosave', toggle.classList.contains('active'));
+    }
+
+    // Load saved preferences on page load
+    document.addEventListener('DOMContentLoaded', function() {
+      // Load dark mode preference
+      const darkMode = localStorage.getItem('darkMode') === 'true';
+      if (darkMode) {
+        document.body.classList.add('dark-mode');
+        document.getElementById('darkModeToggle').classList.add('active');
+      }
+
+      // Load animations preference
+      const animations = localStorage.getItem('animations') !== 'false';
+      if (!animations) {
+        document.getElementById('animationsToggle').classList.remove('active');
+        const fadeElements = document.querySelectorAll('.fade-in');
+        fadeElements.forEach(el => el.style.animation = 'none');
+      }
+
+      // Load autosave preference
+      const autosave = localStorage.getItem('autosave') !== 'false';
+      if (!autosave) {
+        document.getElementById('autosaveToggle').classList.remove('active');
+      }
+
+      // Close settings panel when clicking outside
+      document.addEventListener('click', function(e) {
+        const panel = document.querySelector('.settings-panel');
+        const content = document.getElementById('settingsContent');
+        if (!panel.contains(e.target) && content.classList.contains('show')) {
+          content.classList.remove('show');
+        }
+      });
+    });
+  </script>
 </body>
 </html>
