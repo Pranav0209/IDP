@@ -83,14 +83,19 @@ model.save('static/model/model.keras')
 model = keras.models.load_model('static/model/model.keras', compile=False)
 
 @app.route("/")
-def index():
-    aoa_values = sorted([float(a) for a in df["AoA_deg"].unique()])
+def home():
+    return render_template("home.html")
+
+@app.route("/prediction")
+def prediction():
+    # Explicitly define available angles of attack
+    aoa_values = [6, 8, 10, 12, 14, 16, 18, 20, 22, 24, 26, 28, 30]
     explanation = {
         "aoa": "Angle of attack (degrees). Determines the orientation of the airfoil relative to airflow.",
         "x_m": "Position along the airfoil chord. Typically between 0 (leading edge) and 1 (trailing edge).",
         "pressure": "Local static pressure in Pascals. Input to better estimate cp using the trained model."
     }
-    return render_template("index.html", aoa_values=aoa_values, explanation=explanation)
+    return render_template("prediction.html", aoa_values=aoa_values, explanation=explanation)
 
 @app.route("/get_cp_data")
 def get_cp_data():
@@ -146,4 +151,4 @@ def predict_cp():
     })
 
 if __name__ == "__main__":
-    app.run(debug=True)
+    app.run(debug=True, port=5001)

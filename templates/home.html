@@ -1,0 +1,425 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>DBD Plasma Actuators - Project Overview</title>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      min-height: 100vh;
+      color: #1a202c;
+      line-height: 1.7;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 2rem;
+    }
+
+    .header {
+      text-align: center;
+      margin-bottom: 3rem;
+      color: white;
+    }
+
+    .header h1 {
+      font-size: 3.5rem;
+      font-weight: 700;
+      margin-bottom: 1rem;
+      text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+    }
+
+    .header .subtitle {
+      font-size: 1.5rem;
+      opacity: 0.9;
+      font-weight: 400;
+      margin-bottom: 2rem;
+    }
+
+    .navigation {
+      display: flex;
+      justify-content: center;
+      gap: 1rem;
+      margin-bottom: 3rem;
+    }
+
+    .nav-btn {
+      background: rgba(255, 255, 255, 0.15);
+      backdrop-filter: blur(10px);
+      color: white;
+      border: 2px solid rgba(255, 255, 255, 0.3);
+      padding: 1rem 2rem;
+      border-radius: 50px;
+      font-size: 1.1rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .nav-btn:hover {
+      background: rgba(255, 255, 255, 0.25);
+      transform: translateY(-2px);
+      box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+    }
+
+    .nav-btn.primary {
+      background: linear-gradient(135deg, #48bb78 0%, #38a169 100%);
+      border-color: transparent;
+    }
+
+    .nav-btn.primary:hover {
+      background: linear-gradient(135deg, #38a169 0%, #2f855a 100%);
+      box-shadow: 0 10px 25px rgba(72, 187, 120, 0.3);
+    }
+
+    .card {
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(10px);
+      border-radius: 20px;
+      padding: 2.5rem;
+      margin-bottom: 2rem;
+      box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+      border: 1px solid rgba(255,255,255,0.2);
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 25px 50px rgba(0,0,0,0.15);
+    }
+
+    .card-header {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      margin-bottom: 2rem;
+      padding-bottom: 1rem;
+      border-bottom: 2px solid #e2e8f0;
+    }
+
+    .card-header i {
+      font-size: 2rem;
+      color: #667eea;
+    }
+
+    .card-title {
+      font-size: 2rem;
+      font-weight: 700;
+      color: #2d3748;
+    }
+
+    .section-content {
+      font-size: 1.1rem;
+      color: #4a5568;
+      margin-bottom: 1.5rem;
+    }
+
+    .section-content p {
+      margin-bottom: 1.5rem;
+    }
+
+    .highlight-box {
+      background: linear-gradient(135deg, #f7fafc 0%, #edf2f7 100%);
+      border-left: 4px solid #667eea;
+      padding: 1.5rem;
+      border-radius: 12px;
+      margin: 1.5rem 0;
+    }
+
+    .equation {
+      background: #f8f9fa;
+      border: 1px solid #e9ecef;
+      border-radius: 8px;
+      padding: 1rem;
+      margin: 1rem 0;
+      font-family: 'Courier New', monospace;
+      font-size: 1rem;
+      text-align: center;
+      color: #495057;
+    }
+
+    .features-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 1.5rem;
+      margin: 2rem 0;
+    }
+
+    .feature-item {
+      background: white;
+      padding: 1.5rem;
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+      border-left: 4px solid #667eea;
+    }
+
+    .feature-item h4 {
+      color: #2d3748;
+      margin-bottom: 0.5rem;
+      font-size: 1.2rem;
+    }
+
+    .feature-item p {
+      color: #718096;
+      font-size: 0.95rem;
+    }
+
+    .demo-section {
+      text-align: center;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      padding: 3rem;
+      border-radius: 20px;
+      margin: 2rem 0;
+    }
+
+    .demo-section h3 {
+      font-size: 2rem;
+      margin-bottom: 1rem;
+    }
+
+    .demo-section p {
+      font-size: 1.2rem;
+      margin-bottom: 2rem;
+      opacity: 0.9;
+    }
+
+    .cta-button {
+      background: rgba(255, 255, 255, 0.2);
+      color: white;
+      border: 2px solid rgba(255, 255, 255, 0.3);
+      padding: 1rem 2.5rem;
+      border-radius: 50px;
+      font-size: 1.2rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    .cta-button:hover {
+      background: rgba(255, 255, 255, 0.3);
+      transform: translateY(-2px);
+      box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+    }
+
+    @media (max-width: 768px) {
+      .container {
+        padding: 1rem;
+      }
+
+      .header h1 {
+        font-size: 2.5rem;
+      }
+
+      .header .subtitle {
+        font-size: 1.2rem;
+      }
+
+      .navigation {
+        flex-direction: column;
+        align-items: center;
+      }
+
+      .card {
+        padding: 1.5rem;
+      }
+
+      .card-title {
+        font-size: 1.5rem;
+      }
+
+      .features-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .fade-in {
+      animation: fadeIn 0.6s ease-in;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(30px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <h1><i class="fas fa-bolt"></i> DBD Plasma Actuators</h1>
+      <p class="subtitle">Design and Control for Advanced Flow Manipulation</p>
+      
+      <div class="navigation">
+        <a href="/" class="nav-btn">
+          <i class="fas fa-home"></i>
+          Home
+        </a>
+        <a href="/prediction" class="nav-btn primary">
+          <i class="fas fa-chart-line"></i>
+          Airfoil Analysis Tool
+        </a>
+      </div>
+    </div>
+
+    <div class="card fade-in">
+      <div class="card-header">
+        <i class="fas fa-info-circle"></i>
+        <div class="card-title">Technical Overview</div>
+      </div>
+      <div class="section-content">
+        <p>
+          <strong>Dielectric Barrier Discharge (DBD) plasma actuators</strong> are compact devices that generate a "plasma wind" to influence airflow over surfaces. In a typical DBD actuator, two electrodes (one exposed, one buried) are separated by a dielectric film. Applying a high-frequency (≈10–20 kHz) AC voltage (kilovolts) causes nearby air molecules to ionize.
+        </p>
+        <p>
+          The resulting ions accelerate along the electrode edges, imparting momentum to neutral air and creating a thin "wall-jet" flow (electrohydrodynamic or EHD force) above the surface. This plasma-induced flow can re-energize a low-speed boundary layer, delaying flow separation and stall on a wing (e.g. a NACA 0015 airfoil) and thus enhancing lift.
+        </p>
+        <div class="highlight-box">
+          <strong>Key Advantage:</strong> This momentum transfer occurs without any moving parts, making DBD actuators attractive for active flow control in aerospace applications.
+        </div>
+      </div>
+    </div>
+
+    <div class="card fade-in">
+      <div class="card-header">
+        <i class="fas fa-calculator"></i>
+        <div class="card-title">Governing Physics and Equations</div>
+      </div>
+      <div class="section-content">
+        <p>
+          Modeling a DBD actuator involves plasma physics and fluid dynamics. The electric and magnetic fields obey Maxwell's equations, though in practice the problem is often treated as electrostatic since the frequencies are relatively low.
+        </p>
+        
+        <div class="equation">
+          ∇²φ = −ρₑ/ε₀ (Poisson equation)
+        </div>
+        
+        <p>
+          Charge conservation is enforced by the charge continuity equation, and charge transport is modeled by the drift–diffusion current. The electrohydrodynamic (EHD) body force acting on the fluid is:
+        </p>
+        
+        <div class="equation">
+          F_EHD = ρₑ E (charge density × electric field)
+        </div>
+        
+        <p>
+          This appears as a source term in the Navier–Stokes equations for incompressible flow:
+        </p>
+        
+        <div class="equation">
+          ρ(∂u/∂t + u·∇u) = −∇p + μ∇²u + F_EHD,   ∇·u = 0
+        </div>
+      </div>
+    </div>
+
+    <div class="card fade-in">
+      <div class="card-header">
+        <i class="fas fa-microchip"></i>
+        <div class="card-title">Power Electronics Design</div>
+      </div>
+      <div class="section-content">
+        <p>
+          Because conventional aircraft power is low-voltage (often 24 V DC), we need power electronics to generate the required high-voltage AC for a DBD actuator.
+        </p>
+        
+        <div class="features-grid">
+          <div class="feature-item">
+            <h4><i class="fas fa-exchange-alt"></i> Full-Bridge Inverter</h4>
+            <p>H-bridge configuration with 4 MOSFETs producing ±24V peak-to-peak at 10-20 kHz</p>
+          </div>
+          <div class="feature-item">
+            <h4><i class="fas fa-cogs"></i> Gate Driver Circuit</h4>
+            <p>PWM control with sine/triangle comparison for safe MOSFET switching</p>
+          </div>
+          <div class="feature-item">
+            <h4><i class="fas fa-plug"></i> Step-up Transformer</h4>
+            <p>Ferrite-core transformer (ETD34) with ~333:1 turns ratio producing 8-16 kV</p>
+          </div>
+          <div class="feature-item">
+            <h4><i class="fas fa-thermometer-half"></i> Thermal Management</h4>
+            <p>Multi-channel temperature monitoring with automatic cooling control</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card fade-in">
+      <div class="card-header">
+        <i class="fas fa-desktop"></i>
+        <div class="card-title">Simulation & Analysis</div>
+      </div>
+      <div class="section-content">
+        <p>
+          <strong>COMSOL Multiphysics:</strong> Used for plasma physics modeling with drift-diffusion equations and Poisson's equation to compute EHD body forces.
+        </p>
+        <p>
+          <strong>ANSYS Fluent:</strong> CFD simulation of NACA 0015 airfoil with plasma-induced forces showing delayed flow separation and improved lift characteristics.
+        </p>
+        <div class="highlight-box">
+          <strong>Key Finding:</strong> Simulations showed EHD forces peaking at 10⁵–10⁶ N/m³ near electrode edges, generating boundary-layer jets of several m/s and improving lift-to-drag ratios across various angles of attack.
+        </div>
+      </div>
+    </div>
+
+    <div class="card fade-in">
+      <div class="card-header">
+        <i class="fas fa-wrench"></i>
+        <div class="card-title">Prototype & Validation</div>
+      </div>
+      <div class="section-content">
+        <p>
+          A physical prototype was fabricated with a 3D-printed NACA 0015 wing model, copper foil electrodes, and Kapton dielectric. Wind tunnel testing with smoke visualization confirmed flow reattachment and stall delay, validating the simulation results.
+        </p>
+        
+        <div class="features-grid">
+          <div class="feature-item">
+            <h4>Wing Model</h4>
+            <p>3D-printed NACA 0015, 100mm chord × 80mm span</p>
+          </div>
+          <div class="feature-item">
+            <h4>Electrodes</h4>
+            <p>Copper foil strips with Kapton insulation</p>
+          </div>
+          <div class="feature-item">
+            <h4>Validation</h4>
+            <p>Wind tunnel testing confirmed stall delay</p>
+          </div>
+          <div class="feature-item">
+            <h4>Integration</h4>
+            <p>PCB design and fabrication in KiCad</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="demo-section fade-in">
+      <h3><i class="fas fa-rocket"></i> Interactive Analysis Tool</h3>
+      <p>
+        Explore the aerodynamic effects of DBD plasma actuation through our interactive web interface. 
+        Predict pressure coefficients and visualize flow behavior across different flight conditions.
+      </p>
+      <a href="/prediction" class="cta-button">
+        <i class="fas fa-chart-line"></i>
+        Launch Airfoil Analysis Tool
+      </a>
+    </div>
+  </div>
+</body>
+</html>

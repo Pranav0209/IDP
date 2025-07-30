@@ -345,6 +345,17 @@
       from { opacity: 0; transform: translateY(20px); }
       to { opacity: 1; transform: translateY(0); }
     }
+
+    .nav-btn:hover {
+      background: rgba(255, 255, 255, 0.25) !important;
+      transform: translateY(-2px);
+      box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+    }
+
+    .nav-btn.primary:hover {
+      background: linear-gradient(135deg, #38a169 0%, #2f855a 100%) !important;
+      box-shadow: 0 10px 25px rgba(72, 187, 120, 0.3);
+    }
   </style>
 </head>
 <body>
@@ -352,6 +363,17 @@
     <div class="header">
       <h1><i class="fas fa-plane"></i> Airfoil Analysis</h1>
       <p>Advanced Pressure Coefficient Prediction & Visualization</p>
+      
+      <div class="navigation" style="display: flex; justify-content: center; gap: 1rem; margin-top: 2rem;">
+        <a href="/" class="nav-btn" style="background: rgba(255, 255, 255, 0.15); backdrop-filter: blur(10px); color: white; border: 2px solid rgba(255, 255, 255, 0.3); padding: 0.75rem 1.5rem; border-radius: 50px; font-weight: 600; text-decoration: none; display: inline-flex; align-items: center; gap: 0.5rem; transition: all 0.3s ease;">
+          <i class="fas fa-home"></i>
+          Home
+        </a>
+        <a href="/prediction" class="nav-btn primary" style="background: linear-gradient(135deg, #48bb78 0%, #38a169 100%); color: white; border: none; padding: 0.75rem 1.5rem; border-radius: 50px; font-weight: 600; text-decoration: none; display: inline-flex; align-items: center; gap: 0.5rem; transition: all 0.3s ease;">
+          <i class="fas fa-chart-line"></i>
+          Analysis Tool
+        </a>
+      </div>
     </div>
 
     <div class="card fade-in">
@@ -379,8 +401,8 @@
       <div class="card-header">
         <i class="fas fa-brain"></i>
         <div>
-          <div class="card-title">ML Model Prediction</div>
-          <p style="margin: 0; color: #718096; font-size: 0.9rem;">Predict pressure coefficient using trained models</p>
+          <div class="card-title">Pressure Coefficient Prediction</div>
+          <p style="margin: 0; color: #718096; font-size: 0.9rem;">Predict pressure coefficient using comparitive analysis of 2 trained models</p>
         </div>
       </div>
 
